@@ -1,1 +1,0 @@
-export { Paginations } from "./Paginations";
