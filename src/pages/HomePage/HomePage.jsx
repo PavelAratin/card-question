@@ -1,4 +1,4 @@
-import cls from "./HomePPage.module.css";
+import cls from "./HomePage.module.css";
 import { useState, useEffect, useMemo, useRef } from "react";
 import {
   API_URL,

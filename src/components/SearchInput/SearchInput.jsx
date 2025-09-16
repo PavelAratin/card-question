@@ -1,5 +1,5 @@
 import { SearchIcon } from "../icons";
-import cls from "./searchInput.module.css";
+import cls from "./SearchInput.module.css";
 
 export const SearchInput = ({ value, onChange }) => {
   return (
