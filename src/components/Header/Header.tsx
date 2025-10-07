@@ -10,20 +10,28 @@ export const Header = () => {
   const navigate = useNavigate();
   const { isAuth, setIsAuth } = useAuth();
 
-  const loginHandler = () => {
-    localStorage.setItem(AUTH_STORAGE, !isAuth);
+  const loginHandler = (): void => {
+    localStorage.setItem(AUTH_STORAGE, String(!isAuth));
     setIsAuth(!isAuth);
   };
+
+  const logoClickhandler = (): void => {
+    navigate("/")
+  }
+
+  const addClickHandler = (): void => {
+    navigate("/addquestion")
+  }
   return (
     <header className={cls.header}>
-      <p onClick={() => navigate("/")}>
+      <p onClick={logoClickhandler}>
         <img src={ReactLogo} alt="react logo" />
         <span>React Cards</span>
       </p>
       <div className={cls.headerButtons}>
         <ThemeToogler></ThemeToogler>
         {isAuth && (
-          <Button onClick={() => navigate("/addquestion")}>add</Button>
+          <Button onClick={addClickHandler}>add</Button>
         )}
         <Button onClick={loginHandler} isActive={!isAuth}>
           {isAuth ? "Logout" : "Login"}

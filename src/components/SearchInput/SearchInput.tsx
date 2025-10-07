@@ -1,7 +1,13 @@
 import { SearchIcon } from "../icons";
 import cls from "./SearchInput.module.css";
 
-export const SearchInput = ({ value, onChange }) => {
+interface SearchInputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export const SearchInput = ({ value, onChange }: SearchInputProps) => {
+
   return (
     <div className={cls.inputContainer}>
       <label htmlFor="inputId">

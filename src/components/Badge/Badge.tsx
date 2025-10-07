@@ -1,6 +1,8 @@
+import { ReactNode } from "react";
 import cls from "./Badge.module.css";
+interface Badge { variant: string, children: ReactNode }
 
-export const Badge = ({ variant, children }) => {
+export const Badge = ({ variant, children }: Badge) => {
   switch (variant) {
     case "primary":
       return <div className={`${cls.badge} ${cls.primary}`}>{children}</div>;

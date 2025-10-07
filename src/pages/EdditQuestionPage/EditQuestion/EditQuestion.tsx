@@ -8,14 +8,18 @@ import { API_URL } from "../../../constants";
 import { toast } from "react-toastify";
 import { useFetch } from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+import { FormState, QuestionsType } from "../../../types/types";
 
-const editCardAction = async (_prevState, formData) => {
-  console.log(formData);
+interface EditQuestionProps {
+  initialState?: FormState & { id?: string }; // Добавляем id к типу
+}
+
+const editCardAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
   {
     try {
       await delayFn();
-      const newQuestion = Object.fromEntries(formData);
-      const resources = newQuestion.resources.trim();
+      const newQuestion = Object.fromEntries(formData) as FormState;
+      const resources = newQuestion.resources?.trim();
       const questionId = newQuestion.questionId;
       const isClearForm = newQuestion.clearForm;
 
@@ -28,7 +32,7 @@ const editCardAction = async (_prevState, formData) => {
           question: newQuestion.question,
           answer: newQuestion.answer,
           description: newQuestion.description,
-          resources: resources.length ? resources.split(",") : [],
+          resources: resources?.length ? resources.split(",") : [],
           level: Number(newQuestion.level),
           completed: false,
           editDate: dateFormat(new Date()),
@@ -38,17 +42,19 @@ const editCardAction = async (_prevState, formData) => {
         throw new Error(response.statusText);
       }
 
-      const question = response.json();
+      const question: QuestionsType = await response.json();
       toast.success("New question is edited successfully created");
-      return isClearForm ? {} : question;
+      return isClearForm ? {} : { question };
     } catch (error) {
-      toast.error(error.message);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error(errorMessage);
       return {};
     }
   }
 };
 
-const EditQuestion = ({ initialState = {} }) => {
+
+const EditQuestion = ({ initialState = {} }: EditQuestionProps) => {
   const navigate = useNavigate();
   const [formState, formAction, isPending] = useActionState(editCardAction, {
     ...initialState,
@@ -56,6 +62,13 @@ const EditQuestion = ({ initialState = {} }) => {
   });
 
   const [removeQuestion, isQuestionRemoving] = useFetch(async () => {
+
+    // Добавляем проверку на наличие id
+    if (!initialState.id) {
+      toast.error("Question ID is missing");
+      return;
+    }
+
     await fetch(`${API_URL}/react/${initialState.id}`, {
       method: "DELETE",
     });

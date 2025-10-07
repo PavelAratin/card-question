@@ -2,24 +2,33 @@ import cls from "./Form.module.css";
 import { OPTIONS_LEVELS_VALUE } from "../../constants";
 import { Select } from "../Select/Select";
 import { Button } from "../Button/Button";
+import { FormState } from "../../types/types";
+
+interface FormQuestionProps {
+  formAction: (formData: FormData) => void,
+  formState: FormState,
+  isPending: boolean,
+  submitBtnText: string,
+}
 
 export const FormQuestion = ({
   formAction,
   formState,
   isPending,
   submitBtnText,
-}) => {
+}: FormQuestionProps) => {
+
   return (
     <form action={formAction} className={cls.form}>
       <input type="text" name="questionId" defaultValue={formState.id} hidden />
       <div className={cls.formControl}>
         <label htmlFor="questionField">Question</label>
         <textarea
-          defaultValue={formState.question}
+          defaultValue={formState.question?.question}
           name="question"
           id="questionField"
-          cols="30"
-          rows="2"
+          cols={30}
+          rows={2}
           required
           placeholder="Please enter question"></textarea>
       </div>
@@ -29,8 +38,8 @@ export const FormQuestion = ({
           defaultValue={formState.answer}
           name="answer"
           id="answerField"
-          cols="30"
-          rows="2"
+          cols={30}
+          rows={2}
           required
           placeholder="Please enter a shoer answer"></textarea>
       </div>
@@ -40,8 +49,8 @@ export const FormQuestion = ({
           defaultValue={formState.description}
           name="description"
           id="descriptionField"
-          cols="30"
-          rows="5"
+          cols={30}
+          rows={5}
           required
           placeholder="Please enter a full description"></textarea>
       </div>
@@ -51,8 +60,8 @@ export const FormQuestion = ({
           defaultValue={formState.resources}
           name="resources"
           id="ResoursesField"
-          cols="30"
-          rows="5"
+          cols={30}
+          rows={5}
           required
           placeholder="Please enter a resourses separated a commas"></textarea>
       </div>

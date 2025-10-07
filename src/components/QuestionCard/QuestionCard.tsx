@@ -2,8 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../Button";
 import cls from "./QuestionCard.module.css";
 import { Badge } from "../Badge";
+import { ExtendedQuestionsType } from "../../types/types";
 
-export const QuestionCard = ({ card }) => {
+interface QuestionCardProps {
+  card: ExtendedQuestionsType; // карточка передается как объект
+}
+
+export const QuestionCard = ({ card }: QuestionCardProps) => {
   const navigate = useNavigate();
   const levelVariant =
     card.level === 1 ? "primary" : card.level === 2 ? "warning" : "alert";

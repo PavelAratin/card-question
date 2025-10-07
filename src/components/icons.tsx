@@ -1,4 +1,8 @@
-export const SearchIcon = (props) => {
+interface SearchIconProps {
+  className?: string
+}
+export const SearchIcon = (props: SearchIconProps) => {
+
   return (
     <svg width="1em" height="20px" viewBox="0 0 20 20" {...props}>
       <path

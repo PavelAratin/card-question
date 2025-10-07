@@ -12,34 +12,39 @@ import { SearchInput } from "../../components/SearchInput";
 // import { Button } from "../../components/Button";
 import { Select } from "../../components/Select/Select";
 import { Paginations } from "../../components/Paginations";
+import { PaginationType, QuestionsType } from "../../types/types";
 
 const DEFAULT_PER_PAGE = 10;
 
 export const HomePage = () => {
-  const [searchParams, setSearchParams] = useState(
+  const [searchParams, setSearchParams] = useState<string>(
     `?_page=1&_per_page=${DEFAULT_PER_PAGE}`
   );
-  const [questions, setQuestions] = useState({});
-  const [searchValue, setSearchValue] = useState("");
-  const [sortSelectValue, setSortSelectValue] = useState("");
-  const [countSelectValue, setCountSelectValue] = useState("");
-  const controlsContainerRef = useRef();
+  const [questions, setQuestions] = useState<PaginationType>({
+    data: [],
+    first: 1,
+    items: 0,
+    last: 1,
+    next: null,
+    pages: 1,
+    prev: null
+  });
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [sortSelectValue, setSortSelectValue] = useState<string>("");
+  const [countSelectValue, setCountSelectValue] = useState<string>("");
+  const controlsContainerRef = useRef<HTMLDivElement>(null);
 
-  const [getQuestion, isLoading, error] = useFetch(async (url) => {
+  const [getQuestion, isLoading, error] = useFetch<PaginationType, string>(async (url: string) => {
     const response = await fetch(`${API_URL}/${url}`);
-    const questionsData = await response.json();
+    const questionsData: PaginationType = await response.json();
     setQuestions(questionsData);
     return questionsData;
   });
 
-  // const getActivePageNumber = () => {
-  //   return questions.next === null ? questions.last : questions.next - 1;
-  // };
-
-  const cards = useMemo(() => {
+  const cards = useMemo((): QuestionsType[] => {
     if (questions?.data) {
       if (searchValue.trim()) {
-        return questions.data.filter((data) => {
+        return questions.data.filter((data: QuestionsType) => {
           return data.question
             .toLowerCase()
             .includes(searchValue.trim().toLowerCase());
@@ -51,7 +56,7 @@ export const HomePage = () => {
     return [];
   }, [questions, searchValue]);
 
-  const pagination = useMemo(() => {
+  const pagination = useMemo((): number[] => {
     const totalCardsCount = questions?.pages || 0;
     return Array(totalCardsCount)
       .fill(0)
@@ -64,24 +69,24 @@ export const HomePage = () => {
     getQuestion(`react${searchParams}`);
   }, [searchParams]);
 
-  const onSearchHandler = (e) => {
+  const onSearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
-  const onSortSelectChangeHandler = (e) => {
+  const onSortSelectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortSelectValue(e.target.value);
     setSearchParams(`?_page=1&_per_page=${countSelectValue}&${e.target.value}`);
   };
-  const paginationHandler = (e) => {
-    if (e.target.tagName === "BUTTON") {
+  const paginationHandler = (numberPage: number) => {
+    if (numberPage) {
       setSearchParams(
-        `?_page=${e.target.textContent}&_per_page=${countSelectValue}&${sortSelectValue}`
+        `?_page=${numberPage}&_per_page=${countSelectValue}&${sortSelectValue}`
       );
-      controlsContainerRef.current.scrollIntoView({
+      controlsContainerRef.current?.scrollIntoView({
         behavior: "smooth",
       });
     }
   };
-  const onCountSelectValueHandler = (e) => {
+  const onCountSelectValueHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCountSelectValue(e.target.value);
     setSearchParams(`?_page=1&_per_page=${e.target.value}&${sortSelectValue}`);
   };
@@ -112,15 +117,6 @@ export const HomePage = () => {
             onClick={paginationHandler}
             pagination={pagination}
             questions={questions}></Paginations>
-          // <div className={cls.paginationContainer} onClick={paginationHandler}>
-          //   {pagination.map((value) => {
-          //     return (
-          //       <Button key={value} isActive={value === getActivePageNumber()}>
-          //         {value}
-          //       </Button>
-          //     );
-          //   })}
-          // </div>
         )
       )}
     </>

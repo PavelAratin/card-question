@@ -5,14 +5,14 @@ import { delayFn } from "../../helpers/delayFn";
 import { toast } from "react-toastify";
 import { Loader } from "../../components/Loader/Loader";
 import { FormQuestion } from "../../components/FormQuestion";
+import { FormState } from "../../types/types";
 
-const createCardAction = async (_prevState, formData) => {
-  console.log(formData);
+const createCardAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
   {
     try {
       await delayFn();
-      const newQuestion = Object.fromEntries(formData);
-      const resources = newQuestion.resources.trim();
+      const newQuestion = Object.fromEntries(formData) as FormState;
+      const resources = newQuestion.resources?.trim();
       const isClearForm = newQuestion.clearForm;
 
       const response = await fetch(`${API_URL}/react`, {
@@ -24,7 +24,7 @@ const createCardAction = async (_prevState, formData) => {
           question: newQuestion.question,
           answer: newQuestion.answer,
           description: newQuestion.description,
-          resources: resources.length ? resources.split(",") : [],
+          resources: resources?.length ? resources.split(",") : [],
           level: Number(newQuestion.level),
           completed: false,
           editDate: undefined,
@@ -38,7 +38,8 @@ const createCardAction = async (_prevState, formData) => {
       toast.success("New question is successfully created");
       return isClearForm ? {} : question;
     } catch (error) {
-      toast.error(error.message);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      toast.error(errorMessage);
       return {};
     }
   }

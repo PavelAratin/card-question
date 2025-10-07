@@ -5,7 +5,7 @@ import cls from "./ThemeToogler.module.css";
 export const ThemeToogler = () => {
   const { theme, setTheme } = useTheme();
 
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isCheked = e.target.checked === false;
     const updatedTheme = isCheked ? "dark" : "light";
     setTheme(updatedTheme);

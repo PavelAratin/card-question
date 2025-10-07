@@ -1,5 +1,7 @@
-export const API_URL = import.meta.env.VITE_SERVER_URL;
-export const OPTIONS_SORT_VALUE = [
+import { OptionType } from "../types/types";
+
+export const API_URL: string = import.meta.env.VITE_SERVER_URL;
+export const OPTIONS_SORT_VALUE: OptionType[] = [
   {
     value: "",
     text: "sort by"
@@ -22,7 +24,7 @@ export const OPTIONS_SORT_VALUE = [
   },
 ]
 
-export const OPTIONS_COUNT_VALUE = [
+export const OPTIONS_COUNT_VALUE: OptionType[] = [
   {
     value: "",
     text: "Count",
@@ -46,7 +48,7 @@ export const OPTIONS_COUNT_VALUE = [
   },
 ]
 
-export const OPTIONS_LEVELS_VALUE = [
+export const OPTIONS_LEVELS_VALUE: OptionType[] = [
   {
     value: "",
     text: "Question level",
@@ -66,5 +68,5 @@ export const OPTIONS_LEVELS_VALUE = [
   },
 ]
 
-export const AUTH_STORAGE = "reactCardLogin"
-export const THEME_STORAGE = "reactCardTheme"
+export const AUTH_STORAGE: string = "reactCardLogin";
+export const THEME_STORAGE: string = "reactCardTheme";

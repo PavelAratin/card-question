@@ -5,15 +5,18 @@ import { API_URL } from "../../constants";
 import { useEffect, useState } from "react";
 import { Loader } from "../../components/Loader/Loader";
 import EditQuestion from "./EditQuestion/EditQuestion";
+import { QuestionsType } from "../../types/types";
 
 const EdditQuestionPage = () => {
-  const { id } = useParams();
-  const [question, setQuestion] = useState(null);
-  const [fetchQuestion, isQuestionLoad] = useFetch(async () => {
+  const { id } = useParams<{ id: string }>();
+  const [question, setQuestion] = useState<QuestionsType | null>(null);
+
+  const [fetchQuestion, isQuestionLoad] = useFetch(async (): Promise<void> => {
     const response = await fetch(`${API_URL}/react/${id}`);
     const data = await response.json();
     setQuestion(data);
   });
+
   useEffect(() => {
     fetchQuestion();
   }, []);
