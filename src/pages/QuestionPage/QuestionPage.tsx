@@ -7,18 +7,25 @@ import { useFetch } from "../../hooks/useFetch";
 import { API_URL } from "../../constants";
 import { Loader, SmallLoader } from "../../components/Loader";
 import { useAuth } from "../../hooks/useAuth";
+import { ExtendedQuestionsType } from "../../types/types";
 
 export const QuestionPage = () => {
   const { isAuth } = useAuth();
   const checkboxId = useId();
   const navigate = useNavigate();
   const params = useParams();
-  const [isChecked, setIsCheked] = useState(false);
-  const [card, setCard] = useState(null);
+  const [isChecked, setIsCheked] = useState<boolean>(false);
+  const [card, setCard] = useState<ExtendedQuestionsType | null>(null);
 
-  const levelVariant = () =>
-    card.level === 1 ? "primary" : card.level === 2 ? "warning" : "alert";
-  const completedVariant = () => (card.completed ? "success" : "primary");
+  const levelVariant = (): "primary" | "warning" | "alert" => {
+    if (!card) return "primary"; // Защита от null
+    return card.level === 1 ? "primary" : card.level === 2 ? "warning" : "alert";
+  };
+
+  const completedVariant = (): "success" | "primary" => {
+    if (!card) return "primary"; // Защита от null
+    return card.completed ? "success" : "primary"
+  };
 
   const [fetchCard, isCardLoading] = useFetch(async () => {
     const response = await fetch(`${API_URL}/react/${params.id}`);
@@ -27,7 +34,7 @@ export const QuestionPage = () => {
     return questionData;
   });
 
-  const [updateCard, isCardUpdating] = useFetch(async (isChecked) => {
+  const [updateCard, isCardUpdating] = useFetch(async (isChecked: boolean) => {
     const response = await fetch(`${API_URL}/react/${params.id}`, {
       method: "PATCH",
       body: JSON.stringify({ completed: isChecked }),
@@ -40,7 +47,7 @@ export const QuestionPage = () => {
   useEffect(() => {
     fetchCard();
   }, []);
-  const onCheckBoxHandler = () => {
+  const onCheckBoxHandler = (): void => {
     setIsCheked(!isChecked);
     updateCard(!isChecked);
   };
@@ -55,7 +62,7 @@ export const QuestionPage = () => {
               {card.completed ? "Completed" : "Non Completed"}
             </Badge>
             {card?.editDate && (
-              <p className={cls.editDte}>Edited:{card.editDate}</p>
+              <p className={cls.editDte}>Edited:{card.editDate.toString()}</p>
             )}
           </div>
           <h5 className={cls.cardTitle}>{card.question}</h5>

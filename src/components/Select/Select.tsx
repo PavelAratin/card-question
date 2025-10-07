@@ -1,7 +1,17 @@
 import React from "react";
 import cls from "./Select.module.css";
+import { OptionType } from "../../types/types";
 
-export const Select = (props) => {
+interface SelectProps {
+  name?: string | undefined;
+  value?: string | undefined;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options?: OptionType[];
+  id?: string | undefined;
+  defaultValue?: string | undefined;
+}
+
+export const Select = (props: SelectProps) => {
   return (
     <select
       name={props.name}
